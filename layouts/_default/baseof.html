@@ -3,6 +3,7 @@
   }}">
 {{ partial "head/head" . }}
 {{ partial "head/body-class" . }}
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
 <body class="{{ delimit ((.Scratch.Get " class") | default slice) " " }}"{{ if eq site.Params.doks.scrollSpy true }}
   data-bs-spy="scroll" data-bs-target="#toc" data-bs-root-margin="0px 0px -60%" data-bs-smooth-scroll="true"
@@ -25,6 +26,17 @@
   {{ if eq site.Params.doks.toTopButton true -}}
   {{ partial "footer/to-top" . }}
   {{ end }}
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
 </body>
 
 </html>

@@ -6,7 +6,7 @@
 [build.environment]
   NODE_VERSION = "24.13.0"
   NPM_VERSION = "11.6.2"
-  HUGO_VERSION = "0.155.1"
+  HUGO_VERSION = "0.143.0"
 
 [dev]
   framework = "#custom"

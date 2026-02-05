@@ -22,9 +22,6 @@
   target = "data"
 
 ## layouts
-[[mounts]]
-  source = "layouts"
-  target = "layouts"
 
 [[mounts]]
   # Exclude 'home.html' to avoid conflicts with a custom home page layout defined in the local 'layouts' directory.
@@ -33,19 +30,43 @@
   target = "layouts"
 
 [[mounts]]
+  source = "node_modules/@thulite/doks-core/layouts/partials"
+  target = "layouts/partials"
+
+[[mounts]]
   source = "node_modules/@thulite/core/layouts"
   target = "layouts"
+
+[[mounts]]
+  source = "node_modules/@thulite/core/layouts/_partials"
+  target = "layouts/partials"
 
 [[mounts]]
   source = "node_modules/@thulite/seo/layouts"
   target = "layouts"
 
 [[mounts]]
+  source = "node_modules/@thulite/seo/layouts/_partials"
+  target = "layouts/partials"
+
+[[mounts]]
   source = "node_modules/@thulite/images/layouts"
   target = "layouts"
 
 [[mounts]]
+  source = "node_modules/@thulite/images/layouts/_partials"
+  target = "layouts/partials"
+
+[[mounts]]
   source = "node_modules/@thulite/inline-svg/layouts"
+  target = "layouts"
+
+[[mounts]]
+  source = "node_modules/@thulite/inline-svg/layouts/_partials"
+  target = "layouts/partials"
+
+[[mounts]]
+  source = "layouts"
   target = "layouts"
 
 ## i18n

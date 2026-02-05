@@ -1,0 +1,7 @@
+﻿Watching for changes in D:\Alited\Documents\Tools\code\Hugo\business-news\{archetypes,assets,content,data,i18n,layouts,node_modules,package.json,static}
+Watching for config changes in D:\Alited\Documents\Tools\code\Hugo\business-news\config\_default, D:\Alited\Documents\Tools\code\Hugo\business-news\config\_default\menus, D:\Alited\Documents\Tools\code\Hugo\business-news\go.mod
+Start building sites 鈥?
+hugo v0.142.0-1f746a872442e66b6afd47c8c04ac42dc92cdb6f+extended windows/amd64 BuildDate=2025-01-22T12:20:52Z VendorInfo=gohugoio
+
+Built in 552 ms
+Error: error building site: render: failed to render pages: render of "/tags/finance" failed: "D:\Alited\Documents\Tools\code\Hugo\business-news\layouts\_default\baseof.html:24:5": execute of template failed: template: _default/term.html:24:5: executing "_default/term.html" at <partial "footer/script-footer" .>: error calling partial: "D:\Alited\Documents\Tools\code\Hugo\business-news\node_modules\@thulite\doks-core\layouts\partials\footer\script-footer.html:8:3": execute of template failed: template: partials/footer/script-footer.html:8:3: executing "partials/footer/script-footer.html" at <partial "footer/script-footer-custom.html" .>: error calling partial: partial "footer/script-footer-custom.html" not found

@@ -1,5 +1,5 @@
 title = "Business News"
-theme = "doks"
+# theme = "doks"
 baseurl = "https://bizvigor.netlify.app/"
 disableAliases = true
 disableHugoGeneratorInject = true

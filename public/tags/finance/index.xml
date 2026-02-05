@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Finance on Business News</title>
+    <title>Finance on My Docs</title>
     <link>http://localhost:1313/tags/finance/</link>
-    <description>Recent content in Finance on Business News</description>
+    <description>Recent content in Finance on My Docs</description>
     <generator>Hugo</generator>
-    <language>en-us</language>
+    <language>en</language>
+    <copyright>Copyright (c) 2020-2026 Thulite</copyright>
     <lastBuildDate>Fri, 27 Oct 2023 10:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/finance/index.xml" rel="self" type="application/rss+xml" />
     <item>

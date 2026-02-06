@@ -8,15 +8,8 @@ export async function onRequest(context) {
     const client_id = env.OAUTH_CLIENT_ID;
     const client_secret = env.OAUTH_CLIENT_SECRET;
 
-    // DEBUG: Strict check
     if (!client_id || !client_secret) {
-        return new Response(
-            `Error: Credentials missing in Cloudflare.
-       Client ID: ${client_id ? 'OK' : 'MISSING'}
-       Client Secret: ${client_secret ? 'OK' : 'MISSING'}
-       Please add them in Settings > Environment variables and Redeploy.`,
-            { status: 500 }
-        );
+        return new Response("Error: OAUTH_CLIENT_ID or OAUTH_CLIENT_SECRET is missing. Please check Cloudflare settings.", { status: 500 });
     }
 
     try {
@@ -33,25 +26,63 @@ export async function onRequest(context) {
         const result = await response.json();
 
         if (result.error) {
-            return new Response(`GitHub API Error: ${result.error_description} (${result.error}) \nSent Client ID: ${client_id.substring(0, 5)}...`, { status: 400 });
+            return new Response(`GitHub API Error: ${result.error_description}`, { status: 400 });
         }
 
         const token = result.access_token;
         const provider = "github";
 
+        // Return HTML with VISIBLE status
         return new Response(
-            `<!doctype html><html><body><script>
-        (function() {
-          function receiveMessage(e) {
-            window.opener.postMessage('authorization:${provider}:success:${token}', e.origin);
-            window.opener.postMessage("authorization:github:success:${token}", e.origin);
-          }
-          window.addEventListener("message", receiveMessage, false);
-          window.opener.postMessage('authorization:${provider}:success:${token}', '*');
-          window.opener.postMessage("authorization:github:success:${token}", '*');
-        })()
-      </script></body></html>`,
-            { headers: { "content-type": "text/html;charset=UTF-8" } }
+            `<!doctype html>
+      <html>
+      <head>
+        <style>
+          body { font-family: sans-serif; padding: 20px; text-align: center; }
+          .error { color: red; font-weight: bold; }
+          .success { color: green; font-weight: bold; }
+        </style>
+      </head>
+      <body>
+        <h3>Authenticating with GitHub...</h3>
+        <p id="status">Sending token to CMS...</p>
+        <div id="debug" style="color: #666; font-size: 12px; margin-top: 20px;"></div>
+        
+        <script>
+          (function() {
+            var token = "${token}";
+            var provider = "${provider}";
+            var debug = document.getElementById("debug");
+            var status = document.getElementById("status");
+
+            try {
+              if (window.opener) {
+                // Send messages
+                window.opener.postMessage('authorization:' + provider + ':success:' + token, window.location.origin);
+                window.opener.postMessage("authorization:github:success:" + token, window.location.origin);
+                
+                status.innerHTML = "<span class='success'>Success! You can close this window.</span>";
+                debug.innerText = "Token sent to parent window.";
+                
+                // Optional: Close auto
+                // window.close();
+              } else {
+                 status.innerHTML = "<span class='error'>Error: Cannot find the login window.</span>";
+                 debug.innerText = "window.opener is null. Did you open this in a new tab manually?";
+              }
+            } catch (err) {
+              status.innerHTML = "<span class='error'>Script Error</span>";
+              debug.innerText = err.toString();
+            }
+          })()
+        </script>
+      </body>
+      </html>`,
+            {
+                headers: {
+                    "content-type": "text/html;charset=UTF-8",
+                },
+            }
         );
     } catch (err) {
         return new Response("Server Error: " + err.message, { status: 500 });

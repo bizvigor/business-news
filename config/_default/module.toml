@@ -25,14 +25,15 @@
 
 [[mounts]]
   # Exclude 'home.html' and other overrides to favor local files over theme defaults.
-  excludeFiles = ["home.html", "_default/term.html", "footer/script-footer.html"]
+  # Note: Exclusions must match the path RELATIVE TO THE SOURCE ROOT.
+  excludeFiles = ["home.html", "_default/term.html", "partials/footer/script-footer.html"]
   source = "node_modules/@thulite/doks-core/layouts"
   target = "layouts"
 
 [[mounts]]
   source = "node_modules/@thulite/doks-core/layouts/partials"
   target = "layouts/partials"
-  excludeFiles = "main/blog-meta.html"
+  excludeFiles = ["main/blog-meta.html", "footer/script-footer.html"]
 
 [[mounts]]
   source = "node_modules/@thulite/core/layouts"

@@ -5,5 +5,5 @@
         "directory": "./public",
         "binding": "ASSETS"
     },
-    "main": "./functions/_middleware.js"
+    "main": "worker.js"
 }

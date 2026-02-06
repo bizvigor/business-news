@@ -1,0 +1,9 @@
+{
+    "name": "business-news",
+    "compatibility_date": "2024-11-01",
+    "assets": {
+        "directory": "./public",
+        "binding": "ASSETS"
+    },
+    "main": "./functions/_middleware.js"
+}

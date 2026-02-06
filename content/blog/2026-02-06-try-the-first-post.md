@@ -3,7 +3,7 @@ title: Try the first post
 date: 2025-02-05T11:49:00.000+08:00
 draft: false
 cover:
-  image: /images/es600_03.jpg
+  image: ""
 summary: |-
   This is a test post to verify the deployment pipeline.
   试一下
@@ -19,4 +19,4 @@ This is the first post. Try to see what happened.
 
 这样呢？
 
-![](https://images.liqucn.com/img/h24/h32/img_localize_e0fde5cadc8986103ac5b12952ab04c0_600x400.png)
+![](/images/usb-a-vs-usb-c-which-one-should-you-choose.png)

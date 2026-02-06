@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: Alited/business-news # Path to your GitHub repository
+  repo: bizvigor/business-news # Path to your GitHub repository
   branch: main # Branch to update
   base_url: "https://business-news.pages.dev" # Absolute URL to force custom auth
   auth_endpoint: /oauth/authorize

@@ -19,4 +19,4 @@ This is the first post. Try to see what happened.
 
 不是。这样呢？
 
-![](/images/usb-a-vs-usb-c-which-one-should-you-choose.png)
+![]()

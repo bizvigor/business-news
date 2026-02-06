@@ -25,13 +25,14 @@
 
 [[mounts]]
   # Exclude 'home.html' to avoid conflicts with a custom home page layout defined in the local 'layouts' directory.
-  excludeFiles = "home.html"
+  excludeFiles = ["home.html", "_default/term.html"]
   source = "node_modules/@thulite/doks-core/layouts"
   target = "layouts"
 
 [[mounts]]
   source = "node_modules/@thulite/doks-core/layouts/partials"
   target = "layouts/partials"
+  excludeFiles = "main/blog-meta.html"
 
 [[mounts]]
   source = "node_modules/@thulite/core/layouts"

@@ -56,7 +56,7 @@ copyRight = "Copyright (c) 2020-2026 Thulite"
   tag = "tags"
 
 [permalinks]
-  blog = "/blog/:slug/"
+  posts = "/blog/:slug/"
   docs = "/docs/:sections[1:]/:slug/"
 # docs = "/docs/1.0/:sections[1:]/:slug/"
 

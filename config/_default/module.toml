@@ -69,6 +69,10 @@
   source = "layouts"
   target = "layouts"
 
+[[mounts]]
+  source = "layouts/partials"
+  target = "layouts/partials"
+
 ## i18n
 [[mounts]]
   source = "node_modules/@thulite/doks-core/i18n"

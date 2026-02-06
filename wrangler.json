@@ -1,11 +1,7 @@
 {
     "name": "business-news",
     "compatibility_date": "2024-11-01",
-    "assets": {
-        "directory": "./public",
-        "binding": "ASSETS"
-    },
-    "main": "worker.js",
+    "main": "source.js",
     "observability": {
         "enabled": true,
         "head_sampling_rate": 1,

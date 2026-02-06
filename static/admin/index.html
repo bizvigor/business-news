@@ -105,7 +105,9 @@
           "token": token
         };
 
+        // 3. Save to LocalStorage (Both keys for compatibility)
         localStorage.setItem("netlify-cms-user", JSON.stringify(cmsUser));
+        localStorage.setItem("decap-cms-user", JSON.stringify(cmsUser));
         status.innerHTML = "<span style='color:green'>Saved! Reloading...</span>";
 
         setTimeout(() => window.location.reload(), 500);

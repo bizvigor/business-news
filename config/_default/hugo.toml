@@ -1,6 +1,6 @@
 title = "Business News"
 # theme = "doks"
-baseurl = "https://bizvigor.netlify.app/"
+# baseurl = "https://bizvigor.netlify.app/"
 disableAliases = true
 disableHugoGeneratorInject = true
 # disableKinds = ["taxonomy", "term"]

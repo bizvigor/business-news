@@ -1,6 +1,7 @@
 backend:
-  name: git-gateway
-  branch: main # Branch to update (optional; defaults to master)
+  name: github
+  repo: Alited/business-news # Path to your GitHub repository
+  branch: main # Branch to update
 
 local_backend: true # Allows managing content locally without a git server
 

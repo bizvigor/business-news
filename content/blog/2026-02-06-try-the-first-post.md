@@ -7,5 +7,6 @@ cover:
 summary: "This is a test post to verify the deployment pipeline."
 tags: ["Test", "Debug"]
 categories: ["News"]
+contributors: ["Admin"]
 ---
 This is the first post. Try to see what happened.

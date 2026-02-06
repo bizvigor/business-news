@@ -1,29 +1,23 @@
-Watching for changes in D:\Alited\Documents\Tools\code\Hugo\business-news\{archetypes,assets,content,data,i18n,layouts,node_modules,package.json,static,themes}
-Watching for config changes in D:\Alited\Documents\Tools\code\Hugo\business-news\config\_default, D:\Alited\Documents\Tools\code\Hugo\business-news\config\_default\menus, D:\Alited\Documents\Tools\code\Hugo\business-news\themes\doks\config\_default, D:\Alited\Documents\Tools\code\Hugo\business-news\themes\doks\config\_default\menus, D:\Alited\Documents\Tools\code\Hugo\business-news\go.mod
+
+> doks@1.8.2 build
+> hugo --minify --gc
+
 Start building sites … 
 hugo v0.152.2-6abdacad3f3fe944ea42177844469139e81feda6+extended windows/amd64 BuildDate=2025-10-24T15:31:49Z VendorInfo=gohugoio
 
 WARN  calling IsSet with unsupported type "invalid" (<nil>) will always return false.
-WARN  Description too short on page '/'. 0 characters is < 110
-WARN  Description too short on page '/docs/guides'. 0 characters is < 110
-WARN  Description too short on page '/404'. 0 characters is < 110
-WARN  Description too short on page '/docs/reference/example'. 81 characters is < 110
-WARN  Description too short on page '/docs'. 0 characters is < 110
-WARN  Description too short on page '/docs/reference'. 0 characters is < 110
-WARN  Description too short on page '/blog/example'. 21 characters is < 110
 WARN  Description too short on page '/categories/news'. 0 characters is < 110
-WARN  Description too short on page '/docs/guides/example'. 99 characters is < 110
-WARN  Description too short on page '/contributors'. 0 characters is < 110
-WARN  Description too short on page '/categories'. 0 characters is < 110
-WARN  Description too short on page '/blog'. 0 characters is < 110
-ERROR deprecated: .Site.IsMultiLingual was deprecated in Hugo v0.124.0 and subsequently removed. Use hugo.IsMultilingual instead.
-WARN  Description too short on page '/docs/resources'. 38 characters is < 110
-WARN  Description too short on page '/posts'. 0 characters is < 110
-WARN  Description too short on page '/posts/first-post'. 79 characters is < 110
-WARN  Description too short on page '/privacy'. 0 characters is < 110
-WARN  Description too short on page '/tags/finance'. 0 characters is < 110
 WARN  Description too short on page '/tags/market'. 0 characters is < 110
 WARN  Description too short on page '/tags'. 0 characters is < 110
+WARN  [Thulite SEO] assets/favicon.png does not exist. Add a file that's at least 512x512 pixels.
+WARN  Description too short on page '/contributors'. 0 characters is < 110
+WARN  Description too short on page '/blog'. 0 characters is < 110
 WARN  Description too short on page '/tags/tech'. 0 characters is < 110
-Built in 807 ms
-Error: error building site: logged 1 error(s)
+WARN  Description too short on page '/tags/finance'. 0 characters is < 110
+WARN  Description too short on page '/404'. 0 characters is < 110
+WARN  Description too short on page '/categories'. 0 characters is < 110
+WARN  Description too short on page '/'. 0 characters is < 110
+WARN  Description too short on page '/blog/first-post'. 79 characters is < 110
+ERROR render of "D:/Alited/Documents/Tools/code/Hugo/business-news/content/blog/first-post.md" failed: "D:\Alited\Documents\Tools\code\Hugo\business-news\node_modules\@thulite\doks-core\layouts\blog\single.html:7:9": execute of template failed: template: blog/single.html:7:9: executing "main" at <partial "main/blog-meta.html" .>: error calling partial: "D:\Alited\Documents\Tools\code\Hugo\business-news\node_modules\@thulite\doks-core\layouts\partials\main\blog-meta.html:1:17": execute of template failed: template: _partials/main/blog-meta.html:1:17: executing "_partials/main/blog-meta.html" at <len .Params.contributors>: error calling len: reflect: call of reflect.Value.Type on zero Value
+Total in 1285 ms
+Error: error building site: render: failed to render pages: render of "/blog" failed: "D:\Alited\Documents\Tools\code\Hugo\business-news\node_modules\@thulite\doks-core\layouts\blog\list.html:43:15": execute of template failed: template: blog/list.html:43:15: executing "main" at <partial "main/blog-meta.html" .>: error calling partial: "D:\Alited\Documents\Tools\code\Hugo\business-news\node_modules\@thulite\doks-core\layouts\partials\main\blog-meta.html:1:17": execute of template failed: template: _partials/main/blog-meta.html:1:17: executing "_partials/main/blog-meta.html" at <len .Params.contributors>: error calling len: reflect: call of reflect.Value.Type on zero Value

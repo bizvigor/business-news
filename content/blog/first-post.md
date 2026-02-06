@@ -9,6 +9,7 @@ cover:
 summary: "Global markets show resilience as technology sector earnings beat expectations."
 tags: ["Market", "Tech", "Finance"]
 categories: ["News"]
+contributors: ["Admin"]
 ---
 
 ## Tech Sector Leads the Way

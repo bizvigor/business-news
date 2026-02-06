@@ -4,7 +4,7 @@ description = "Congrats on setting up a new Doks project!"
 images = ["cover.png"]
 
 # mainSections
-mainSections = ["docs", "blog"]
+mainSections = ["blog"]
 
 [social]
   twitter = "getdoks"

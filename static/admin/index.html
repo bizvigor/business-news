@@ -7,59 +7,95 @@
   <title>Content Manager</title>
 
   <style>
+    #diagnostic-bar {
+      background: #333;
+      color: #fff;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      border-bottom: 2px solid orange;
+      display: flex;
+      justify-content: space-between;
+    }
+
     #manual-login {
-      margin-top: 20px;
-      border-top: 1px solid #ccc;
-      padding-top: 20px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 2px solid #ccc;
+      max-width: 400px;
       text-align: center;
-      font-family: sans-serif;
+      background: #f9f9f9;
       display: none;
-      /* Hidden by default until CMS loads */
     }
   </style>
 </head>
 
 <body>
+  <div id="diagnostic-bar">
+    <span id="auth-status">Checking Auth...</span>
+    <span id="storage-status">Checking Storage...</span>
+    <button onclick="localStorage.clear();window.location.reload()" style="font-size:10px">Reset All</button>
+  </div>
+
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
   <div id="manual-login">
-    <p style="font-size: 12px; color: #666;">Having trouble? <a href="#" onclick="toggleManual()">Enter Token
-        Manually</a></p>
-    <div id="token-input-area" style="display:none; margin-top: 10px;">
-      <input type="text" id="manual-token" placeholder="gho_..." style="padding: 5px; width: 250px;">
-      <button onclick="handleManualToken()">Save & Login</button>
-      <div id="login-status"></div>
-    </div>
+    <h3>Manual Login (Fallback)</h3>
+    <p style="font-size: 12px; color: #666;">If the buttons above don't work, verify your token works below.</p>
+    <input type="text" id="manual-token" placeholder="gho_... (Paste Token Here)" style="padding: 5px; width: 250px;">
+    <button onclick="handleManualToken()">Save & Force Load</button>
+    <div id="login-status"></div>
   </div>
 
   <script>
-    // Show the manual link after 2 seconds (if CMS login didn't happen)
-    setTimeout(() => { document.getElementById('manual-login').style.display = 'block'; }, 2000);
+    // --- DIAGNOSTICS ---
+    function updateDiagnostics() {
+      var user = localStorage.getItem("netlify-cms-user");
+      var authStatus = document.getElementById("auth-status");
+      var storageStatus = document.getElementById("storage-status");
+      var manualBox = document.getElementById("manual-login");
 
-    function toggleManual() {
-      var el = document.getElementById('token-input-area');
-      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      if (user) {
+        try {
+          var userData = JSON.parse(user);
+          authStatus.innerHTML = "<span style='color:lime'>USER FOUND: " + userData.login + "</span>";
+          storageStatus.innerHTML = "Token: " + (userData.token ? "Present" : "Missing");
+          console.log("CMS User detected in storage:", userData);
+
+          // If user is found but CMS login screen is still visible (check via simple timeout), show warning
+          setTimeout(() => {
+            // Primitive check: Decap CMS usually removes its loading screen. 
+            // If we are still seeing this script's UI dominance, maybe CMS crashed.
+          }, 3000);
+        } catch (e) {
+          authStatus.innerHTML = "<span style='color:red'>CORRUPT USER DATA</span>";
+        }
+      } else {
+        authStatus.innerHTML = "<span style='color:orange'>NO USER LOGGED IN</span>";
+        storageStatus.innerHTML = "Storage Empty";
+        // Show manual login box if not logged in
+        manualBox.style.display = "block";
+      }
     }
 
-    // Common function to save token safely and avoid Loop
+    // Run diagnostics immediately
+    updateDiagnostics();
+
+    // --- MANUAL AUTH LOGIC ---
     async function saveTokenAndReload(token) {
-      var status = document.getElementById('login-status') || console;
-      if (status.innerHTML) status.innerHTML = "Verifying token...";
+      var status = document.getElementById('login-status');
+      status.innerHTML = "Verifying token against GitHub...";
 
       try {
-        // 1. Verify token and get User Data
         var resp = await fetch("https://api.github.com/user", {
           headers: { "Authorization": "token " + token }
         });
 
-        if (!resp.ok) {
-          throw new Error("GitHub rejected this token: " + resp.status);
-        }
+        if (!resp.ok) throw new Error("GitHub Invalid Token: " + resp.status);
 
         var user = await resp.json();
 
-        // 2. Construct the exact object Decap CMS needs
         var cmsUser = {
           "backendName": "github",
           "name": user.name || user.login,
@@ -69,18 +105,13 @@
           "token": token
         };
 
-        // 3. Save to LocalStorage
         localStorage.setItem("netlify-cms-user", JSON.stringify(cmsUser));
+        status.innerHTML = "<span style='color:green'>Saved! Reloading...</span>";
 
-        if (status.innerHTML) status.innerHTML = "<span style='color:green'>Success! Reloading...</span>";
-
-        // 4. Reload to let CMS pick it up
         setTimeout(() => window.location.reload(), 500);
 
       } catch (e) {
-        console.error(e);
-        if (status.innerHTML) status.innerHTML = "<span style='color:red'>Error: " + e.message + "</span>";
-        alert("Login Failed: " + e.message);
+        status.innerHTML = "<span style='color:red'>Error: " + e.message + "</span>";
       }
     }
 
@@ -90,14 +121,11 @@
       saveTokenAndReload(token);
     }
 
-    // Auto-Listener for popup message
+    // Auto-Listener for popup
     window.addEventListener("message", function (event) {
       if (typeof event.data === 'string' && event.data.startsWith("authorization:github:success:")) {
-        console.log("Token received via Message!");
         var token = event.data.split(":")[3];
-        if (token) {
-          saveTokenAndReload(token);
-        }
+        if (token) saveTokenAndReload(token);
       }
     });
   </script>

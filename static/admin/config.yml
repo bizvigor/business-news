@@ -4,7 +4,8 @@ backend:
   branch: main # Branch to update
   base_url: "https://business-news.pages.dev" # Absolute URL to force custom auth
   auth_endpoint: oauth/authorize
-
+  
+local_backend: true
 
 media_folder: "static/images" # Media files will be stored in the repo under static/images
 public_folder: "/images" # The src attribute for uploaded media will begin with /images

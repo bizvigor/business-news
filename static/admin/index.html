@@ -5,94 +5,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Manager</title>
-
-  <style>
-    #diagnostic-bar {
-      background: #333;
-      color: #fff;
-      padding: 10px;
-      font-family: monospace;
-      font-size: 12px;
-      border-bottom: 2px solid orange;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    #manual-login {
-      margin: 20px auto;
-      padding: 20px;
-      border: 2px solid #ccc;
-      max-width: 400px;
-      text-align: center;
-      background: #f9f9f9;
-      display: none;
-    }
-  </style>
 </head>
 
 <body>
-  <div id="diagnostic-bar">
-    <span id="auth-status">Checking Auth...</span>
-    <span id="storage-status">Checking Storage...</span>
-    <button onclick="localStorage.clear();window.location.reload()" style="font-size:10px">Reset All</button>
-  </div>
-
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 
-  <div id="manual-login">
-    <h3>Manual Login (Fallback)</h3>
-    <p style="font-size: 12px; color: #666;">If the buttons above don't work, verify your token works below.</p>
-    <input type="text" id="manual-token" placeholder="gho_... (Paste Token Here)" style="padding: 5px; width: 250px;">
-    <button onclick="handleManualToken()">Save & Force Load</button>
-    <div id="login-status"></div>
-  </div>
-
   <script>
-    // --- DIAGNOSTICS ---
-    function updateDiagnostics() {
-      var user = localStorage.getItem("netlify-cms-user");
-      var authStatus = document.getElementById("auth-status");
-      var storageStatus = document.getElementById("storage-status");
-      var manualBox = document.getElementById("manual-login");
+    // --- AUTH ROBUSTNESS SCRIPT ---
+    // This handles the OAuth popup message automatically to prevent race conditions.
 
-      if (user) {
-        try {
-          var userData = JSON.parse(user);
-          authStatus.innerHTML = "<span style='color:lime'>USER FOUND: " + userData.login + "</span>";
-          storageStatus.innerHTML = "Token: " + (userData.token ? "Present" : "Missing");
-          console.log("CMS User detected in storage:", userData);
-
-          // If user is found but CMS login screen is still visible (check via simple timeout), show warning
-          setTimeout(() => {
-            // Primitive check: Decap CMS usually removes its loading screen. 
-            // If we are still seeing this script's UI dominance, maybe CMS crashed.
-          }, 3000);
-        } catch (e) {
-          authStatus.innerHTML = "<span style='color:red'>CORRUPT USER DATA</span>";
-        }
-      } else {
-        authStatus.innerHTML = "<span style='color:orange'>NO USER LOGGED IN</span>";
-        storageStatus.innerHTML = "Storage Empty";
-        // Show manual login box if not logged in
-        manualBox.style.display = "block";
-      }
-    }
-
-    // Run diagnostics immediately
-    updateDiagnostics();
-
-    // --- MANUAL AUTH LOGIC ---
     async function saveTokenAndReload(token) {
-      var status = document.getElementById('login-status');
-      status.innerHTML = "Verifying token against GitHub...";
-
       try {
+        // 1. Verify token/Get User
         var resp = await fetch("https://api.github.com/user", {
           headers: { "Authorization": "token " + token }
         });
 
-        if (!resp.ok) throw new Error("GitHub Invalid Token: " + resp.status);
+        if (!resp.ok) return; // Silent fail if invalid
 
         var user = await resp.json();
 
@@ -105,25 +35,19 @@
           "token": token
         };
 
-        // 3. Save to LocalStorage (Both keys for compatibility)
+        // 2. Save compatibility keys
         localStorage.setItem("netlify-cms-user", JSON.stringify(cmsUser));
         localStorage.setItem("decap-cms-user", JSON.stringify(cmsUser));
-        status.innerHTML = "<span style='color:green'>Saved! Reloading...</span>";
 
-        setTimeout(() => window.location.reload(), 500);
+        // 3. Reload to Force Login
+        window.location.reload();
 
       } catch (e) {
-        status.innerHTML = "<span style='color:red'>Error: " + e.message + "</span>";
+        console.error("Auth Auto-Fix Failed", e);
       }
     }
 
-    function handleManualToken() {
-      var token = document.getElementById('manual-token').value.trim();
-      if (!token) return alert("Please enter a token");
-      saveTokenAndReload(token);
-    }
-
-    // Auto-Listener for popup
+    // Listen for the Popup Message
     window.addEventListener("message", function (event) {
       if (typeof event.data === 'string' && event.data.startsWith("authorization:github:success:")) {
         var token = event.data.split(":")[3];

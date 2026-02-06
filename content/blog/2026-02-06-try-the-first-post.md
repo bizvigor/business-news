@@ -18,3 +18,5 @@ categories:
 This is the first post. Try to see what happened.
 
 这样呢？
+
+![](/images/es600_03.jpg)

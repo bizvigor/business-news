@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CMS Reset Tool</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 50px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>CMS State Reset</h1>
+    <p>Clearing Browser Storage...</p>
+    <div id="status"></div>
+
+    <script>
+        try {
+            localStorage.clear();
+            sessionStorage.clear();
+
+            // Specifically target Netlify/Decap keys just in case
+            localStorage.removeItem("netlify-cms-user");
+
+            document.getElementById("status").innerHTML = "<p style='color:green'><strong>Success! Storage Cleared.</strong></p><p>You can now go back to the admin panel.</p>";
+
+            setTimeout(() => {
+                window.location.href = "index.html"; // Redirect back to admin
+            }, 2000);
+        } catch (e) {
+            document.getElementById("status").innerHTML = "<p style='color:red'>Error: " + e.message + "</p>";
+        }
+    </script>
+
+    <br>
+    <a href="index.html"><button>Go to Admin Panel</button></a>
+</body>
+
+</html>

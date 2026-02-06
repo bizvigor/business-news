@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Token Validator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Manual Token Test</h1>
+    <p>This checks if the token you received is actually valid for GitHub.</p>
+
+    <label>Paste Token (gho_...):</label><br>
+    <input type="text" id="tokenIn" style="width:300px" placeholder="gho_..."><br><br>
+
+    <button onclick="checkToken()">validate Token</button>
+
+    <div id="result" style="margin-top:20px; background:#f0f0f0; padding:10px;"></div>
+
+    <script>
+        async function checkToken() {
+            var token = document.getElementById('tokenIn').value.trim();
+            var resDiv = document.getElementById('result');
+            resDiv.innerHTML = "Checking...";
+
+            try {
+                var req = await fetch("https://api.github.com/user", {
+                    headers: {
+                        "Authorization": "token " + token,
+                        "Accept": "application/json"
+                    }
+                });
+
+                var json = await req.json();
+
+                if (req.ok) {
+                    resDiv.innerHTML = "<b style='color:green'>VALID TOKEN!</b><br>Hello " + json.login + "<br>Scopes: " + req.headers.get("x-oauth-scopes");
+                } else {
+                    resDiv.innerHTML = "<b style='color:red'>INVALID TOKEN!</b><br>" + JSON.stringify(json);
+                }
+            } catch (e) {
+                resDiv.innerHTML = "<b style='color:red'>NETWORK ERROR</b><br>" + e.toString();
+            }
+        }
+    </script>
+</body>
+
+</html>

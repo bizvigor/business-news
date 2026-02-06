@@ -1,9 +1,9 @@
 backend:
   name: github
-  repo: Alited/business-news # Path to your GitHub repository
+  repo: bizvigor/business-news # Path to your GitHub repository
   branch: main # Branch to update
-
-local_backend: true # Allows managing content locally without a git server
+  base_url: "https://business-news.pages.dev" # Absolute URL to force custom auth
+  auth_endpoint: /oauth/authorize
 
 media_folder: "static/images" # Media files will be stored in the repo under static/images
 public_folder: "/images" # The src attribute for uploaded media will begin with /images
@@ -11,7 +11,7 @@ public_folder: "/images" # The src attribute for uploaded media will begin with 
 collections:
   - name: "posts" # Used in routes, e.g., /admin/collections/blog
     label: "Post" # Used in the UI
-    folder: "content/posts" # The path to the folder where the documents are stored
+    folder: "content/blog" # The path to the folder where the documents are stored
     create: true # Allow users to create new documents in this collection
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
     fields: # The fields for each document, usually mapping to front matter

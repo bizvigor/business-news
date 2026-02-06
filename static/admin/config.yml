@@ -2,6 +2,8 @@ backend:
   name: github
   repo: Alited/business-news # Path to your GitHub repository
   branch: main # Branch to update
+  base_url: "" # Defaults to relative path
+  auth_endpoint: oauth/authorize # Calls /functions/oauth/authorize.js
 
 local_backend: true # Allows managing content locally without a git server
 

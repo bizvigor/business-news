@@ -54,6 +54,7 @@
 [[mounts]]
   source = "node_modules/@thulite/images/layouts"
   target = "layouts"
+  excludeFiles = ["_markup/render-image.html"]
 
 [[mounts]]
   source = "node_modules/@thulite/images/layouts/_partials"

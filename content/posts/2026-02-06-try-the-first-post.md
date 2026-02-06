@@ -1,6 +1,6 @@
 ---
 title: Try the first post
-date: 2026-02-06T11:49:00.000+08:00
+date: 2025-02-05T11:49:00.000+08:00
 draft: false
 cover:
   image: /images/a.jpg

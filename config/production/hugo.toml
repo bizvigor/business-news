@@ -1,2 +1,2 @@
 # Overrides for production environment
-baseurl = "/"
+baseURL = "https://business-news.pages.dev/"

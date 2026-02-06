@@ -10,23 +10,6 @@
 <body>
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <div id="debug-log"
-    style="position:fixed; bottom:0; left:0; background:rgba(0,0,0,0.8); color:white; padding:10px; width:100%; z-index:9999; font-family:monospace; font-size:12px; height:150px; overflow:auto;">
-    Debug Log (Waiting for message)...<br>
-  </div>
-  <script>
-    window.addEventListener("message", function (event) {
-      const log = document.getElementById("debug-log");
-      console.log("Received message:", event);
-      log.innerHTML += "<div>Received: " + (typeof event.data === 'string' ? event.data : JSON.stringify(event.data)) + " (Origin: " + event.origin + ")</div>";
-
-      if (typeof event.data === 'string' && event.data.startsWith("authorization:github:success:")) {
-        log.innerHTML += "<div style='color:lime; font-weight:bold'>SUCCESS MSG DETECTED! Token found.</div>";
-        // Manual trigger if CMS misses it?
-        // Decap CMS should handle this automatically since it also listens on window.
-      }
-    });
-  </script>
 </body>
 
 </html>

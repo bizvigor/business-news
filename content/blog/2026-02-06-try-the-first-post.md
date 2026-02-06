@@ -3,7 +3,7 @@ title: Try the first post
 date: 2025-02-05T11:49:00.000+08:00
 draft: false
 cover:
-  image: /images/es600_02.jpg
+  image: /images/a.jpg
 summary: |-
   This is a test post to verify the deployment pipeline.
   试一下
@@ -19,4 +19,4 @@ This is the first post. Try to see what happened.
 
 不是。这样呢？
 
-![]()
+![](/images/es600_02.jpg)

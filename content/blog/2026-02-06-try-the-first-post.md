@@ -19,4 +19,4 @@ This is the first post. Try to see what happened.
 
 这样呢？
 
-![](/images/es600_03.jpg)
+![](https://images.liqucn.com/img/h24/h32/img_localize_e0fde5cadc8986103ac5b12952ab04c0_600x400.png)

@@ -3,13 +3,13 @@ export async function onRequest(context) {
     const url = new URL(request.url);
     const code = url.searchParams.get("code");
 
-    if (!code) return new Response("Error: No code provided from GitHub.", { status: 400 });
+    if (!code) return new Response("Error: No code provided.", { status: 400 });
 
     const client_id = env.OAUTH_CLIENT_ID;
     const client_secret = env.OAUTH_CLIENT_SECRET;
 
     if (!client_id || !client_secret) {
-        return new Response("Error: OAUTH_CLIENT_ID or OAUTH_CLIENT_SECRET is missing. Please check Cloudflare settings.", { status: 500 });
+        return new Response("Error: Credentials (ID/Secret) missing in Cloudflare.", { status: 500 });
     }
 
     try {
@@ -32,57 +32,56 @@ export async function onRequest(context) {
         const token = result.access_token;
         const provider = "github";
 
-        // Return HTML with VISIBLE status
         return new Response(
             `<!doctype html>
       <html>
       <head>
-        <style>
-          body { font-family: sans-serif; padding: 20px; text-align: center; }
-          .error { color: red; font-weight: bold; }
-          .success { color: green; font-weight: bold; }
-        </style>
+        <style>body{font-family:sans-serif;text-align:center;padding:20px;}</style>
       </head>
       <body>
-        <h3>Authenticating with GitHub...</h3>
-        <p id="status">Sending token to CMS...</p>
-        <div id="debug" style="color: #666; font-size: 12px; margin-top: 20px;"></div>
-        
+        <h3>Login Successful</h3>
+        <p>Sending authentication token to CMS...</p>
+        <p id="info" style="color:#666;font-size:12px">Attempting to communicate with opener...</p>
         <script>
           (function() {
             var token = "${token}";
             var provider = "${provider}";
-            var debug = document.getElementById("debug");
-            var status = document.getElementById("status");
+            var msg = "authorization:" + provider + ":success:" + token;
+            var origin = window.location.origin;
+            var info = document.getElementById("info");
 
-            try {
+            function sendMsg() {
               if (window.opener) {
-                // Send messages
-                window.opener.postMessage('authorization:' + provider + ':success:' + token, window.location.origin);
-                window.opener.postMessage("authorization:github:success:" + token, window.location.origin);
-                
-                status.innerHTML = "<span class='success'>Success! You can close this window.</span>";
-                debug.innerText = "Token sent to parent window.";
-                
-                // Optional: Close auto
-                // window.close();
+                // Send to exact origin
+                window.opener.postMessage(msg, origin);
+                // Send to wildcard (fallback)
+                window.opener.postMessage(msg, "*");
+                info.innerText = "Message sent: " + new Date().toLocaleTimeString();
               } else {
-                 status.innerHTML = "<span class='error'>Error: Cannot find the login window.</span>";
-                 debug.innerText = "window.opener is null. Did you open this in a new tab manually?";
+                info.innerText = "Error: Parent window lost. Please try logging in again.";
               }
-            } catch (err) {
-              status.innerHTML = "<span class='error'>Script Error</span>";
-              debug.innerText = err.toString();
             }
+
+            // Send immediately
+            sendMsg();
+            
+            // Retry every 500ms for 5 seconds
+            var count = 0;
+            var interval = setInterval(function() {
+              sendMsg();
+              count++;
+              if (count > 10) clearInterval(interval);
+            }, 500);
+
+            // Close after 2 seconds (giving time for retry)
+            setTimeout(function() {
+               window.close();
+            }, 2000);
           })()
         </script>
       </body>
       </html>`,
-            {
-                headers: {
-                    "content-type": "text/html;charset=UTF-8",
-                },
-            }
+            { headers: { "content-type": "text/html;charset=UTF-8" } }
         );
     } catch (err) {
         return new Response("Server Error: " + err.message, { status: 500 });

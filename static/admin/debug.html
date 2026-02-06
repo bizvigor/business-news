@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CMS Debugger</title>
+    <style>
+        #log-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: #000;
+            color: #0f0;
+            font-family: monospace;
+            font-size: 12px;
+            overflow: auto;
+            padding: 10px;
+            border-top: 2px solid #333;
+            z-index: 10000;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="log-container">Initializing Debugger...<br></div>
+
+    <script>
+        (function () {
+            var logElem = document.getElementById('log-container');
+
+            function printLog(prefix, args) {
+                var msg = Array.from(args).map(arg => {
+                    if (typeof arg === 'object') return JSON.stringify(arg);
+                    return String(arg);
+                }).join(' ');
+                logElem.innerHTML += `<div>[${prefix}] ${msg}</div>`;
+                logElem.scrollTop = logElem.scrollHeight;
+            }
+
+            var originalLog = console.log;
+            var originalError = console.error;
+            var originalWarn = console.warn;
+
+            console.log = function () { originalLog.apply(console, arguments); printLog('INFO', arguments); };
+            console.error = function () { originalError.apply(console, arguments); printLog('ERROR', arguments); };
+            console.warn = function () { originalWarn.apply(console, arguments); printLog('WARN', arguments); };
+
+            window.onerror = function (msg, url, line) {
+                printLog('CRIT', [msg, url, line]);
+            };
+
+            // Listen for the Auth Message specifically
+            window.addEventListener("message", function (event) {
+                if (typeof event.data === 'string' && event.data.startsWith("authorization")) {
+                    console.log("Captured Auth Event:", event.data, "Origin:", event.origin);
+                }
+            });
+        })();
+    </script>
+
+    <!-- Load CMS -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+</body>
+
+</html>

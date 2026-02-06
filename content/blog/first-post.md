@@ -3,7 +3,7 @@ title: "Market Rally Continues as Tech Stocks Surge"
 date: 2023-10-27T10:00:00+08:00
 draft: false
 cover:
-  image: "https://images.unsplash.com/photo-1611974765270-ca12586343bb?auto=format&fit=crop&q=80&w=1000"
+  image: "images/cover.png"
   alt: "Stock Market Graph"
   caption: "Tech stocks lead the market rally."
 summary: "Global markets show resilience as technology sector earnings beat expectations."

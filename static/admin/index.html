@@ -5,11 +5,102 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Manager</title>
+
+  <style>
+    #manual-login {
+      margin-top: 20px;
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
+      text-align: center;
+      font-family: sans-serif;
+      display: none;
+      /* Hidden by default until CMS loads */
+    }
+  </style>
 </head>
 
 <body>
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <div id="manual-login">
+    <p style="font-size: 12px; color: #666;">Having trouble? <a href="#" onclick="toggleManual()">Enter Token
+        Manually</a></p>
+    <div id="token-input-area" style="display:none; margin-top: 10px;">
+      <input type="text" id="manual-token" placeholder="gho_..." style="padding: 5px; width: 250px;">
+      <button onclick="handleManualToken()">Save & Login</button>
+      <div id="login-status"></div>
+    </div>
+  </div>
+
+  <script>
+    // Show the manual link after 2 seconds (if CMS login didn't happen)
+    setTimeout(() => { document.getElementById('manual-login').style.display = 'block'; }, 2000);
+
+    function toggleManual() {
+      var el = document.getElementById('token-input-area');
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Common function to save token safely and avoid Loop
+    async function saveTokenAndReload(token) {
+      var status = document.getElementById('login-status') || console;
+      if (status.innerHTML) status.innerHTML = "Verifying token...";
+
+      try {
+        // 1. Verify token and get User Data
+        var resp = await fetch("https://api.github.com/user", {
+          headers: { "Authorization": "token " + token }
+        });
+
+        if (!resp.ok) {
+          throw new Error("GitHub rejected this token: " + resp.status);
+        }
+
+        var user = await resp.json();
+
+        // 2. Construct the exact object Decap CMS needs
+        var cmsUser = {
+          "backendName": "github",
+          "name": user.name || user.login,
+          "login": user.login,
+          "avatar_url": user.avatar_url,
+          "email": user.email,
+          "token": token
+        };
+
+        // 3. Save to LocalStorage
+        localStorage.setItem("netlify-cms-user", JSON.stringify(cmsUser));
+
+        if (status.innerHTML) status.innerHTML = "<span style='color:green'>Success! Reloading...</span>";
+
+        // 4. Reload to let CMS pick it up
+        setTimeout(() => window.location.reload(), 500);
+
+      } catch (e) {
+        console.error(e);
+        if (status.innerHTML) status.innerHTML = "<span style='color:red'>Error: " + e.message + "</span>";
+        alert("Login Failed: " + e.message);
+      }
+    }
+
+    function handleManualToken() {
+      var token = document.getElementById('manual-token').value.trim();
+      if (!token) return alert("Please enter a token");
+      saveTokenAndReload(token);
+    }
+
+    // Auto-Listener for popup message
+    window.addEventListener("message", function (event) {
+      if (typeof event.data === 'string' && event.data.startsWith("authorization:github:success:")) {
+        console.log("Token received via Message!");
+        var token = event.data.split(":")[3];
+        if (token) {
+          saveTokenAndReload(token);
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>
